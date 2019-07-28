@@ -23,6 +23,6 @@ public class Category {
 
     @DBRef //Dans le doc catégorie j'enregistre que l'id du produit, comme ça quand je charge la catégorie je connais la liste des produits de cette catégorie ?
     //Important d'initialiser pour mongoDB pour supposer qu'elle est vide ici
-    private Collection<Product> products = new ArrayList<>();
+    @ToString.Exclude private Collection<Product> products = new ArrayList<>();
 
 }
