@@ -4,6 +4,7 @@ import org.sid.security.jwt.JWTAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -23,17 +24,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy((SessionCreationPolicy.STATELESS))
-                .and()
-                .authorizeRequests().antMatchers("/categories/**").hasAuthority("ADMIN")
-                .and()
-                .authorizeRequests().antMatchers("/produits/**").hasAuthority("USER")
-                .and()
-                .authorizeRequests().anyRequest().authenticated()
-                .and()
-                .addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        http.csrf().disable();
+        http.sessionManagement().sessionCreationPolicy((SessionCreationPolicy.STATELESS));
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/categories/**").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/products/**").permitAll();
+        http.authorizeRequests().antMatchers("/categories/**").hasAuthority("ADMIN");
+        http.authorizeRequests().antMatchers("/products/**").hasAuthority("USER");
+        http.authorizeRequests().anyRequest().authenticated();
+        http.addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
 
     }

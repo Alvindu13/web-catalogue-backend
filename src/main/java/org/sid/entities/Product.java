@@ -5,24 +5,32 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
+import javax.persistence.*;
+import java.io.Serializable;
+
+
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Product {
+public class Product implements Serializable {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
-    private double price;
+    private String description;
+    private double currentPrice;
+    private boolean promotion;
+    private boolean selected;
+    //savoir s'il est en stock
+    private boolean available;
+    private String photoName;
 
-    @DBRef //mapping object document (et non ORM comme avec JPA)
+    //@DBRef //mapping object document (et non ORM comme avec JPA)
+    @ManyToOne
     private Category category;
-
 
 }
