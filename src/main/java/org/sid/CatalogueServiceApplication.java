@@ -5,10 +5,12 @@ import org.sid.dao.CategoryRepository;
 import org.sid.dao.ProductRepository;
 import org.sid.entities.Category;
 import org.sid.entities.Product;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -19,10 +21,15 @@ public class CatalogueServiceApplication implements CommandLineRunner{
 
     private ProductRepository productRepository;
     private CategoryRepository categoryRepository;
+    private RepositoryRestConfiguration repositoryRestConfiguration;
 
-    public CatalogueServiceApplication(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public CatalogueServiceApplication(
+            ProductRepository productRepository,
+            CategoryRepository categoryRepository,
+            RepositoryRestConfiguration repositoryRestConfiguration) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.repositoryRestConfiguration = repositoryRestConfiguration;
     }
 
     public static void main(String[] args) {
@@ -31,6 +38,8 @@ public class CatalogueServiceApplication implements CommandLineRunner{
 
     @Override
     public void run(String... args) throws Exception {
+
+        repositoryRestConfiguration.exposeIdsFor(Product.class);
 
         categoryRepository.save(
                 new Category(null, "Computers",
